@@ -1,28 +1,41 @@
-// world.js
-// Get the button element with id of lookup
-var button = document.getElementById("lookup");
-
-document.addEventListener('DOMContentLoaded', function () {
+$(document).ready(function() {
     // Listen for clicks on the "Lookup" button
-    document.getElementById('lookup').addEventListener('click', function () {
+    $("#lookup").click(function() {
         // Fetch data by opening an AJAX connection
-        var country = document.getElementById('countryInput').value;
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', 'world.php?country=' + encodeURIComponent(country), true);
+        var country = $("#countryInput").val();
 
-        // Set up the callback function to handle the response
-        xhr.onload = function () {
-            if (xhr.status >= 200 && xhr.status < 400) {
+        // Use jQuery for AJAX request
+        $.ajax({
+            url: 'world.php?country=' + encodeURIComponent(country),
+            type: 'GET',
+            success: function(response) {
                 // Success! Print the data into the div with id "result"
-                document.getElementById('result').innerHTML = xhr.responseText;
-            } else {
+                $("#result").html(response);
+            },
+            error: function(xhr, status, error) {
                 // Error handling if the request was unsuccessful
-                console.error('Request failed with status:', xhr.status);
+                console.error('Request failed with status:', status, 'Error:', error);
             }
-        };
+        });
+    });
 
-        // Send the AJAX request
-        xhr.open("GET",url,true);
-        xhr.send();
+    // Listen for clicks on the "LookupBtn" button
+    $("#lookupBtn").click(function() {
+        // Fetch data by opening an AJAX connection for city lookup
+        var country = $("#countryInput").val();
+
+        // Use jQuery for AJAX request for city lookup
+        $.ajax({
+            url: 'world.php?country=' + encodeURIComponent(country) + '&lookup=cities',
+            type: 'GET',
+            success: function(response) {
+                // Success! Print the data into the div with id "result"
+                $("#result").html(response);
+            },
+            error: function(xhr, status, error) {
+                // Error handling if the request was unsuccessful
+                console.error('Request failed with status:', status, 'Error:', error);
+            }
+        });
     });
 });
